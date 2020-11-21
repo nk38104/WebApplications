@@ -1,5 +1,5 @@
 from database import create_user, get_user
-from password_utils import verify_password
+from hasher import verify_input
 
 
 def register(user):
@@ -10,7 +10,7 @@ def register(user):
 def authenticate(user):
     user_database = get_user(user['username'])
     
-    if user_database and verify_password(user['password'], user_database[2]):
+    if user_database and verify_input(user['password'], user_database[2]):
         return True, user_database[0]
     else:
         return False, None

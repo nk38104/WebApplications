@@ -1,7 +1,7 @@
 #! C:\Users\Nikola Kelava\AppData\Local\Programs\Python\Python38-32\python.exe
 import mysql.connector
 import json
-from password_utils import hash_password
+from hasher import hash_string
 
 
 db_conf = {
@@ -23,14 +23,14 @@ def get_database_connection():
 
 
 def create_user(user):
-    hashed_password = hash_password(user['password'])
-    # hash answer also
+    hashed_password = hash_string(user['password'])
+    hashed_answer = hash_string(user['answer'])
     
     mydb = get_database_connection()
     cursor = mydb.cursor()
     try:
         cursor.execute("""INSERT INTO users (username, password, email, question, answer) 
-                        VALUES (%s, %s, %s, %s, %s)""", (user['username'], hashed_password, user['email'], user['question'], user['answer']))
+                        VALUES (%s, %s, %s, %s, %s)""", (user['username'], hashed_password, user['email'], user['question'], hashed_answer))
         mydb.commit()
     except:
         return None

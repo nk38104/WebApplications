@@ -81,7 +81,7 @@ print ('''
                 </div>
             </form>''')
 
-if (os.environ["REQUEST_METHOD"].upper() == "POST") and (not success):
+if (environ["REQUEST_METHOD"].upper() == "POST") and (not success):
     print('<script>alert("Registration failed!\\nMake sure your inputs are correct.");</script>')
 
 print("""</body>

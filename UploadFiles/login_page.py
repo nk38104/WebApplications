@@ -66,8 +66,10 @@ print('''
                 </div>
             </form>''')
 
-if (os.environ["REQUEST_METHOD"].upper() == "POST") and (not success):
+if (environ["REQUEST_METHOD"].upper() == "POST") and (not success):
     print('<script>alert("Incorrect username or/and password.\\nLogin failed!");</script>')
 
 print("""</body>
         </html>""")
+
+
