@@ -1,6 +1,7 @@
 import mysql.connector
 import json
 
+
 db_conf= {"host":"localhost",
            "user":"root",
            "passwd":"",

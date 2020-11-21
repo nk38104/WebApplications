@@ -1,5 +1,6 @@
 from subjects import subjects
 
+
 def get_status(subjectKey, data):
     for element in data:                # Go throu data and if radio button was pressed first letter will be status key
         if (element[1:] == subjectKey):
