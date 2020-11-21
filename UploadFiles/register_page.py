@@ -1,12 +1,12 @@
 #! C:\Users\Nikola Kelava\AppData\Local\Programs\Python\Python38-32\python.exe
-import os
-import cgi
-import authentication
+from cgi import FieldStorage
+from os import environ
+from authentication import register
 
 
-params = cgi.FieldStorage()
+params = FieldStorage()
 
-if (os.environ['REQUEST_METHOD'].upper()) == 'POST':
+if (environ['REQUEST_METHOD'].upper()) == 'POST':
     user = {
         'username': params.getvalue('username'),
         'password' : params.getvalue('password'),
@@ -16,7 +16,7 @@ if (os.environ['REQUEST_METHOD'].upper()) == 'POST':
         'answer' : params.getvalue('answer')
     }
     
-    success = authentication.register(user)
+    success = register(user)
     
     if success:
         print('Location: login_page.py')
