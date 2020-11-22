@@ -14,7 +14,7 @@ if (environ['REQUEST_METHOD'].upper()) == 'POST':
         'repeated_password': params.getvalue('repeated_password'),
         'email': params.getvalue('email'),
         'question': params.getvalue('question'),
-        'answer': params.getvalue('answer')
+        'answer': params.getvalue('answer').lower()
     }
     
     success = register(user)

@@ -63,6 +63,10 @@ print('''
                     <label>Not registered?</label>
                     <a href="register_page.py">Register</a>
                 </div>
+                <div>
+                    <label>Forgot password?</label>
+                    <a href="change_password_page.py">Reset password</a>
+                </div>
             </form>''')
 
 if (environ['REQUEST_METHOD'].upper() == 'POST') and (not success):

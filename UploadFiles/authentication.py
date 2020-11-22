@@ -22,8 +22,13 @@ def authenticate(user):
     else:
         return False, None
 
-# For later on
-def change_password(username, password, repeated_password):
-    return True
+
+def get_user_question(user):
+    user_record = get_user(user['username'])
+    
+    if (user_record):
+        return alert_status['question'], user_record
+    else:
+        return alert_status['username'], ''
 
 

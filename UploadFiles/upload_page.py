@@ -7,6 +7,9 @@ request_type = environ.get('REQUEST_METHOD', '')
 
 form = FieldStorage()
 
+if(environ['REQUEST_METHOD'].upper() == 'POST'):
+    print('Location: login_page.py')
+
 print('''
        <!DOCTYPE html>
         <html>
@@ -14,6 +17,9 @@ print('''
         </head>
         <body>
             <h1>Upload Page</h1>
+            <div>
+                <a href="login_page.py">Log out</a> 
+            </div>
         </body>
         </html>''')
 

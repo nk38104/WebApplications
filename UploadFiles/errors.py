@@ -6,7 +6,8 @@ alert_status = {
     'password': 'p',
     'username': 'u',
     'email': 'e',
-    'database': 'd'
+    'database': 'd',
+    'question': 'q'
 }
 
 alert_message = {
@@ -14,7 +15,8 @@ alert_message = {
     'p': 'Passwords do not match!\\nPlease make sure you enter same password in both password fields.',
     'u': 'The username already exists!\\nPlease use a different username.',
     'e': 'The e-mail already exists!\\nPlease use a different e-mail.',
-    'd': 'We apologize but there are some technical issues!\\nWe will solve them as soon as possible so please try again later.'
+    'd': 'We apologize but there are some technical issues!\\nWe will solve them as soon as possible so please try again later.',
+    'q': 'The answer you entered is incorrect.'
 }
 
 

@@ -25,7 +25,7 @@ def get_database_connection():
 
 def create_user(user):
     hashed_password = hash_string(user['password'])
-    hashed_answer = hash_string(user['answer'])
+    hashed_answer = hash_string(user['answer'].lower())
     try:
         mydb = get_database_connection()
         cursor = mydb.cursor()
@@ -69,5 +69,14 @@ def check_availability(username, email):
         return alert_status['username']
     else:
         return alert_status['email']
+
+
+def change_user_password(username, password):
+    hashed_password = hash_string(password)
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'UPDATE users SET password="{hashed_password}" WHERE username="{username}"')
+    mydb.commit()
+    mydb.close()
 
 
