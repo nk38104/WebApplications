@@ -2,25 +2,23 @@
 from cgi import FieldStorage
 from os import environ
 from authentication import authenticate
+from errors import alert_message
 
 
 params = FieldStorage()
 
 if (environ['REQUEST_METHOD'].upper() == 'POST'):
-    if(params.getvalue('buttonRedirect') == 'Register'):
-        print('Location: register_page.py')
-    else:
-        user = {
-            'username' : params.getvalue("username"),
-            'password' : params.getvalue("password")
-        }
-        
-        success, user_id = authenticate(user)
-        
-        if not success:
-            print('Location: upload_page.py')
-        
-        
+    user = {
+        'username': params.getvalue('username'),
+        'password': params.getvalue('password')
+    }
+    
+    success, user_id = authenticate(user)   # user_id is for session later on
+    
+    if success:
+        print('Location: upload_page.py')
+
+
 print('''
        <!DOCTYPE html>
         <html>
@@ -62,14 +60,15 @@ print('''
                     <input type="submit" name="buttonRedirect" value="Login"/>
                 </div>
                 <div>
-                    <input type="submit" name="buttonRedirect" value="Register">
+                    <label>Not registered?</label>
+                    <a href="register_page.py">Register</a>
                 </div>
             </form>''')
 
-if (environ["REQUEST_METHOD"].upper() == "POST") and (not success):
-    print('<script>alert("Incorrect username or/and password.\\nLogin failed!");</script>')
+if (environ['REQUEST_METHOD'].upper() == 'POST') and (not success):
+    print(f'<script>alert("Login failed!\\n{alert_message["l"]}");</script>')
 
-print("""</body>
-        </html>""")
+print('''</body>
+        </html''')
 
 

@@ -2,6 +2,7 @@
 from cgi import FieldStorage
 from os import environ
 from authentication import register
+from errors import alert_message, alert_status
 
 
 params = FieldStorage()
@@ -9,20 +10,19 @@ params = FieldStorage()
 if (environ['REQUEST_METHOD'].upper()) == 'POST':
     user = {
         'username': params.getvalue('username'),
-        'password' : params.getvalue('password'),
-        'repeatedPassword' : params.getvalue('repeatedPassword'),
+        'password': params.getvalue('password'),
+        'repeated_password': params.getvalue('repeated_password'),
         'email': params.getvalue('email'),
-        'question' : params.getvalue('question'),
-        'answer' : params.getvalue('answer')
+        'question': params.getvalue('question'),
+        'answer': params.getvalue('answer')
     }
     
     success = register(user)
     
-    if success:
+    if (success == alert_status['success']):
         print('Location: login_page.py')
 
 
-print('')
 print ('''
        <!DOCTYPE html>
         <html>
@@ -62,7 +62,7 @@ print ('''
                 </div>
                 <div>
                     <label>Repeat password</label>
-                    <input type="password" name="repeatedPassword" placeholder="Repeat password..."/>
+                    <input type="password" name="repeated_password" placeholder="Repeat password..."/>
                 </div>
                 <div>
                     <label>E-mail</label>
@@ -81,8 +81,8 @@ print ('''
                 </div>
             </form>''')
 
-if (environ["REQUEST_METHOD"].upper() == "POST") and (not success):
-    print('<script>alert("Registration failed!\\nMake sure your inputs are correct.");</script>')
+if (environ['REQUEST_METHOD'].upper() == 'POST') and (success != alert_status['success']):
+    print(f'<script>alert("Registration failed!\\n{alert_message[success]}");</script>')
 
 print("""</body>
         </html>""")
