@@ -25,10 +25,6 @@ def authenticate(user):
 
 def get_user_question(user):
     user_record = get_user(user['username'])
-    
-    if (user_record):
-        return alert_status['question'], user_record
-    else:
-        return alert_status['username'], ''
+    return (user_record[4], user_record[5]) if (user_record) else (None, None)
 
 

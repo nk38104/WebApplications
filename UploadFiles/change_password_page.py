@@ -8,7 +8,8 @@ from database import change_user_password
 
 
 params = FieldStorage()
-stage = alert_status['username']
+stage = params.getvalue('submit')
+error_msg = None
 
 if (environ['REQUEST_METHOD'].upper()) == 'POST':
     user = {
@@ -17,15 +18,20 @@ if (environ['REQUEST_METHOD'].upper()) == 'POST':
         'password': params.getvalue('password')
     }
     
-    stage, user_record = get_user_question(user)
+    if(stage != None):
+        stored_question, stored_answer = get_user_question(user)
     
-    if(user_record):
-        question = user_record[4]
-        if(user['answer'] != None):
-            stored_answer = user_record[5]
-            if(verify_input(stored_answer, user['answer'].lower())):
-                change_user_password(user['username'], user['password'])
-                print('Location: login_page.py')
+        if(stored_question):
+            if(stage == 'Reset'):
+                if(verify_input(stored_answer, user['answer'].lower())):
+                    change_user_password(user['username'], user['password'])
+                    print('Location: login_page.py')
+                else:
+                    error_msg = alert_status['answer_doesnt_match']
+                    stage = 'Next'
+        else:
+            error_msg = alert_status['username_doesnt_exist']
+            stage = None
 
 
 print ('''
@@ -58,18 +64,18 @@ print ('''
                     <h2>RESET PASSWORD</h2>
                 </div>''')
 
-if(stage == alert_status['username']):
+if(stage == None):
     print('''
                     <div>
                         <label>Username</label>
                         <input type="text" name="username" placeholder="Enter username..."/>
                     </div>
                     <div>
-                        <input type="submit" value="Next"/>
+                        <input type="submit" name="submit" value="Next"/>
                     </div>
                 </form>''')
 
-if(stage == alert_status['question']):
+if(stage == 'Next'):
     print('''
                     <div>
                         <label>Secret question?</label>
@@ -88,13 +94,13 @@ if(stage == alert_status['question']):
                         <input type="password" name="repeated_password" placeholder="Repeat password..."/>
                     </div>
                     <div>
-                        <input type="submit" value="Reset"/>
+                        <input type="submit" name="submit" value="Reset"/>
                     </div>
                     <input type="hidden" name="username" value="{1}"/>
-                </form>'''.format(question, user['username']))
+                </form>'''.format(stored_question, user['username']))
 
-if (environ['REQUEST_METHOD'].upper() == 'POST') and (stage != alert_status['question']):
-    print(f'<script>alert("Registration failed!\\n{alert_message[stage]}");</script>')
+if (environ['REQUEST_METHOD'].upper() == 'POST') and (error_msg):
+    print(f'<script>alert("Reset failed!\\n{alert_message[error_msg]}");</script>')
 
 print('''
         </body>

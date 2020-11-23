@@ -7,7 +7,8 @@ alert_status = {
     'username': 'u',
     'email': 'e',
     'database': 'd',
-    'question': 'q'
+    'username_doesnt_exist': 'ude',
+    'answer_doesnt_match': 'adm'
 }
 
 alert_message = {
@@ -16,7 +17,8 @@ alert_message = {
     'u': 'The username already exists!\\nPlease use a different username.',
     'e': 'The e-mail already exists!\\nPlease use a different e-mail.',
     'd': 'We apologize but there are some technical issues!\\nWe will solve them as soon as possible so please try again later.',
-    'q': 'The answer you entered is incorrect.'
+    'ude': 'The username you entered does not exist.',
+    'adm': 'The answer you entered is incorrect.'
 }
 
 
