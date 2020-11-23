@@ -15,20 +15,23 @@ if (environ['REQUEST_METHOD'].upper()) == 'POST':
     user = {
         'username': params.getvalue('username'),
         'answer': params.getvalue('answer'),
-        'password': params.getvalue('password')
+        'password': params.getvalue('password'),
+        'repeated_password': params.getvalue('repeated_password')
     }
     
     if(stage != None):
         stored_question, stored_answer = get_user_question(user)
     
         if(stored_question):
-            if(stage == 'Reset'):
-                if(verify_input(stored_answer, user['answer'].lower())):
+            if(stage == 'Reset') and (verify_input(stored_answer, user['answer'].lower())):
+                if(user['password'] == user['repeated_password']):
                     change_user_password(user['username'], user['password'])
                     print('Location: login_page.py')
                 else:
-                    error_msg = alert_status['answer_doesnt_match']
+                    error_msg = alert_status['repeated_password_doesnt_match']
                     stage = 'Next'
+            else:
+                error_msg = alert_status['answer_doesnt_match']
         else:
             error_msg = alert_status['username_doesnt_exist']
             stage = None

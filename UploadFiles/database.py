@@ -61,14 +61,14 @@ def check_availability(username, email):
         mydb.close()
     except:
         mydb.close()
-        return alert_status['database']
+        return alert_status['database_error']
     
     if (not username_result) and (not email_result):
         return alert_status['success']
     elif (username_result):
-        return alert_status['username']
+        return alert_status['username_exists']
     else:
-        return alert_status['email']
+        return alert_status['email_exists']
 
 
 def change_user_password(username, password):

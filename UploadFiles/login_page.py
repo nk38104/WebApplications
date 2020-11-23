@@ -2,7 +2,7 @@
 from cgi import FieldStorage
 from os import environ
 from authentication import authenticate
-from errors import alert_message
+from errors import alert_message, alert_status
 
 
 params = FieldStorage()
@@ -14,6 +14,7 @@ if (environ['REQUEST_METHOD'].upper() == 'POST'):
     }
     
     success, user_id = authenticate(user)   # user_id is for session later on
+    error_msg = alert_status['incorrect_username_password']
     
     if success:
         print('Location: upload_page.py')
@@ -70,7 +71,7 @@ print('''
             </form>''')
 
 if (environ['REQUEST_METHOD'].upper() == 'POST') and (not success):
-    print(f'<script>alert("Login failed!\\n{alert_message["l"]}");</script>')
+    print(f'<script>alert("Login failed!\\n{alert_message[error_msg]}");</script>')
 
 print('''</body>
         </html''')

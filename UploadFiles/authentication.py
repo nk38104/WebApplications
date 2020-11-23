@@ -10,8 +10,8 @@ def register(user):
 
     if (password_check) and (availability == alert_status['success']):
         user_id = create_user(user)
-        return availability if (user_id) else alert_status['database']
-    return alert_status['password'] if (not password_check) else availability
+        return availability if (user_id) else alert_status['database_error']
+    return alert_status['repeated_password_doesnt_match'] if (not password_check) else availability
 
 
 def authenticate(user):
