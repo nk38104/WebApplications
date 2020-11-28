@@ -129,7 +129,7 @@ print ('''
                     background: #2691d9;
                     border-radius: 25px;
                     font-size: 18px;
-                    color: #e9f4fb;
+                    color: white;
                     font-weight: 700;
                     cursor: pointer;
                     outline: none;
