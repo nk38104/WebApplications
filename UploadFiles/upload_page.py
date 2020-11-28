@@ -7,7 +7,7 @@ request_type = os.environ['REQUEST_METHOD']
 params = FieldStorage()
 img_dir_path = '../../../../htdocs/images'
 
-if not os.path.isdir(img_dir_path): #inace ce vratiti gresku svaki put kad se post-a
+if (not os.path.isdir(img_dir_path)): #inace ce vratiti gresku svaki put kad se post-a
     os.mkdir(img_dir_path)
  
 images = os.listdir(img_dir_path)
@@ -15,7 +15,7 @@ images = os.listdir(img_dir_path)
 if (request_type.upper() == 'POST'):
     file_item = params["image"]
 
-    if file_item.filename:
+    if (file_item.filename):
         img_dir_path = '../../../../htdocs/images/'
         img_dir_path += os.path.basename(file_item.filename)
         open(img_dir_path, 'wb').write(file_item.file.read(250000))
@@ -33,6 +33,7 @@ print('''
        <!DOCTYPE html>
         <html>
         <head>
+            <title>Upload Files</title>
             <style>
                 body {
                     margin: 0;
@@ -81,7 +82,7 @@ print('''
 for image in images:
     print(f'<img src="../../../../images/{image}" width=300 height=200 alt="{image}">')
     
-if (request_type.upper() == 'POST' and (not success)):
+if (request_type.upper() == 'POST') and (not success):
     print(f'<script>alert("Image upload failed!\\n{message}");</script>')
 
 print('''</div>

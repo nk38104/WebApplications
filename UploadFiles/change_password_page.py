@@ -41,6 +41,7 @@ print ('''
        <!DOCTYPE html>
         <html>
         <head>
+            <title>Upload Files</title>
             <style>
                 body {
                     margin: 0;
