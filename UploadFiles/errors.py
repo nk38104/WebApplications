@@ -8,7 +8,7 @@ alert_status = {
     'email_exists': 'ee',
     'database_error': 'de',
     'username_doesnt_exist': 'ude',
-    'answer_doenst_match': 'adm'
+    'answer_doesnt_match': 'adm'
 }
 
 alert_message = {
