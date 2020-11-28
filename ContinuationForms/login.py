@@ -76,9 +76,6 @@ print  ("""
             color: #33FFD6;
             border-radius: 5px;
         }
-        ::placeholder {
-            color: #33FFD6;
-        }   
     </style>
 </head>    
 <body>
