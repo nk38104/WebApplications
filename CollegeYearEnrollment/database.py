@@ -19,7 +19,7 @@ def get_DB_connection():
 def check_if_exists():
     myDB = get_DB_connection()
     cursor = myDB.cursor()
-    cursor.execute("SELECT * FROM session" )
+    cursor.execute("SELECT * FROM session")
     records = cursor.fetchone()
 
     if records is None:

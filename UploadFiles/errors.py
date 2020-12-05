@@ -11,6 +11,7 @@ alert_status = {
     'answer_doesnt_match': 'adm'
 }
 
+
 alert_message = {
     'iup': 'You have entered an invalid username and/or password.',
     'rpdm': 'Passwords do not match!\\nPlease make sure you enter same password in both password fields.',

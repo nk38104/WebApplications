@@ -1,9 +1,17 @@
 #! C:\Users\Nikola Kelava\AppData\Local\Programs\Python\Python38-32\python.exe
 from cgi import FieldStorage
 from os import environ, mkdir, path, listdir
+from session import get_session_data
+from database import get_user_role
 
-request_type = environ['REQUEST_METHOD']
+
 params = FieldStorage()
+request_type = environ['REQUEST_METHOD'].upper()
+user_data = get_session_data()
+
+if (user_data is None):
+    print('Location: login_page.py')
+
 img_dir_path = '../../../../htdocs/images'
 
 if (not path.isdir(img_dir_path)): # otherwise it returns error with every POST
@@ -11,7 +19,7 @@ if (not path.isdir(img_dir_path)): # otherwise it returns error with every POST
  
 images = listdir(img_dir_path)
 
-if (request_type.upper() == 'POST'):
+if (request_type == 'POST'):
     file_item = params["image"]
 
     if (file_item.filename):
@@ -31,12 +39,12 @@ print('''
        <!DOCTYPE html>
         <html>
         <head>
-            <title>Upload Files</title>
+            <title>UploadFiles</title>
             <style>
                 body {
+                    height: 100vh;
                     margin: 0;
                     padding: 0;
-                    height: 100vh;
                     background: linear-gradient(120deg, #2980b9, #8e44ad);
                     overflow: hidden;
                 }
@@ -44,31 +52,43 @@ print('''
                     border-bottom: 1px solid silver;
                 }
                 #nav-header {
-                    text-align: center;
-                    margin-left: 6%;
-                    font-size: 30px;
+                    text-align: left;
+                    margin-left: 5%;
+                    font-size: 26px;
                     color: white;
+                }
+                #nav-edit a {
+                    float: right;
+                    margin: 15px 30px 0 0;
+                    font-size: 20px;
+                    color: white;
+                    text-decoration: none;
                 }
                 #nav-logout input {
                     float: right;
-                    margin-top: 15px;
-                    margin-right: 70px;
-                    padding: 5px 15px;
+                    margin: 10px 70px 0 0;
+                    padding: 3px 15px 7px;
                     font-size: 18px;
-                    border: 1px solid silver;
-                    border-radius: 5px;
-                    background: linear-gradient(120deg, #2980b9, #8e44ad);
+                    font-weight: bold;
                     color: white;
+                    background: #4b7dde;
+                    border: 2px solid silver;
+                    border-radius: 20px;
+                }
+                #nav-logout input:hover, #nav-edit a:hover {
+                    transform: scale(1.05,1.05);
+                    text-decoration: underline;
                 }
                 #form-upload {
                     margin-left: 36%;
+                    color: white;
                 }
                 #form-upload form {
+                    text-align: center;
                     width: 500px;
                     margin-top: 120px;
                     padding: 10px;
-                    text-align: center;
-                    border: 3px solid white;
+                    border: 2px solid white;
                     border-radius: 5px;
                 }
                 .txt-upload {
@@ -79,11 +99,17 @@ print('''
                     border: 1px solid silver;
                     border-radius: 5px;
                 }
+                img:hover {
+                    transform: scale(1.05,1.05);
+                }
                 #image-container {
                     height: 510px;
-                    margin: 70px 350px 0 350px;
+                    margin: 80px 350px 0 350px;
                     border-bottom: 1px solid silver;
                     overflow: auto;
+                }
+                body, input {
+                    font-family: Comic Sans MS;
                 }
             </style>
         </head>
@@ -92,17 +118,24 @@ print('''
                 <div id="nav-logout">
                     <form action="login_page.py" method="GET">
                         <input type="submit" value="Log out">
-                    </form>
-                </div>
-                <div id="nav-header">
-                    <h1>Upload Files</h1>
-                </div>
-            </nav>''')
+                    </form>''')
+
+user_role = get_user_role(user_data['user_id']).upper()
+
+if (user_role == 'ADMIN'):
+    print('''       <div id="nav-edit">
+                        <a href="users_page.py">Users</a>
+                    </div>''')
 
 print('''
+            </div>
+                <div id="nav-header">
+                    <h1>UploadFiles</h1>
+                </div>
+            </nav>
             <div id="form-upload">
                 <form enctype="multipart/form-data" method="POST">
-                    <div id="upload_container">
+                    <div id="upload-container">
                         <input class="txt-upload" type="file" name="image" accept="image/*">
                         <input class="txt-upload" type="submit" name="upload" value="Upload">
                     </div>
@@ -113,7 +146,7 @@ print('''
 for image in images:
     print(f'<img src="../../../../images/{image}" width=350 height=200 alt="{image}">')
     
-if (request_type.upper() == 'POST') and (not success):
+if (request_type == 'POST') and (not success):
     print(f'<script>alert("Image upload failed!\\n{message}");</script>')
 
 print('''</div>

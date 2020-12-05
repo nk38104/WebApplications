@@ -3,6 +3,13 @@ import mysql.connector
 import json
 from hasher import hash_string
 from errors import alert_status
+from enum import Enum
+
+
+class Sex(Enum):
+    Male = 'M'
+    Female = 'F'
+    Intersex = 'I'
 
 
 db_conf = {
@@ -26,28 +33,74 @@ def get_database_connection():
 def create_user(user):
     hashed_password = hash_string(user['password'])
     hashed_answer = hash_string(user['answer'].lower())
+
     try:
         mydb = get_database_connection()
         cursor = mydb.cursor()
-        cursor.execute("""INSERT INTO users (username, password, email, question, answer) 
-                            VALUES (%s, %s, %s, %s, %s)""", (user['username'], 
-                                                             hashed_password, 
-                                                             user['email'], 
-                                                             user['question'], 
-                                                             hashed_answer))
+        cursor.execute('''INSERT INTO users (username, password, email, question, answer, sex) VALUES (%s, %s, %s, %s, %s, %s)''', (user['username'], 
+                                                                                                                                    hashed_password, 
+                                                                                                                                    user['email'], 
+                                                                                                                                    user['question'], 
+                                                                                                                                    hashed_answer,
+                                                                                                                                    user['sex']))
         mydb.commit()
     except:
         return None
     return cursor.lastrowid
 
 
-def get_user(username):
+def get_user_by_id(user_id):
     mydb = get_database_connection()
     cursor = mydb.cursor()
-    cursor.execute(f'SELECT * FROM users WHERE username = "{username}"')
-    my_result = cursor.fetchone()
-    mydb.close()
-    return my_result
+    cursor.execute(f'SELECT * FROM users WHERE user_id="{user_id}"')
+    myresult = cursor.fetchone()
+    return myresult
+
+
+def get_users():
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute('SELECT * FROM users')
+    myresult = cursor.fetchall()
+    return myresult
+
+
+def get_user_by_username(username):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'SELECT * FROM users WHERE username="{username}"')
+    myresult = cursor.fetchone()
+    return myresult
+
+
+def get_user_role(user_id):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'SELECT roles.role FROM roles JOIN users ON users.role_id=roles.role_id WHERE users.user_id = "{user_id}"')
+    myresult = cursor.fetchone()
+    return myresult[0]
+
+
+def delete_user(user_id):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'DELETE FROM users WHERE user_id="{user_id}"')
+    mydb.commit()
+
+
+def update_user(user):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'UPDATE users SET username="{user["username"]}", sex="{user["sex"]}", role_id={user["role_id"]} WHERE user_id="{user["user_id"]}"')
+    mydb.commit()
+
+
+def get_role(role_id):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'SELECT * FROM roles WHERE role_id="{role_id}"')
+    myresult = cursor.fetchone()
+    return myresult
 
 
 def check_availability(username, email):
@@ -78,5 +131,42 @@ def change_user_password(username, password):
     cursor.execute(f'UPDATE users SET password="{hashed_password}" WHERE username="{username}"')
     mydb.commit()
     mydb.close()
+
+
+def create_session():
+    query = 'INSERT INTO sessions (data) VALUES (%s)'
+    values = (json.dumps({}),)
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(query, values)
+    mydb.commit()
+    return cursor.lastrowid
+
+
+def get_session(session_id):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'SELECT * FROM sessions WHERE session_id={session_id}')
+    myresult = cursor.fetchone()
+    
+    if (myresult is None):
+        return None, None
+    return myresult[0], json.loads(myresult[1])
+
+
+def destroy_session(session_id):
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(f'DELETE FROM sessions WHERE session_id={session_id}')
+    mydb.commit()
+
+
+def replace_session(session_id, data): # Replace-delete first, then insert (delete/insert)
+    query = 'REPLACE INTO sessions(session_id, data) VALUES (%s, %s)'
+    values = (session_id, json.dumps(data))
+    mydb = get_database_connection()
+    cursor = mydb.cursor()
+    cursor.execute(query, values)
+    mydb.commit()
 
 
