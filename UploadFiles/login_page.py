@@ -9,6 +9,7 @@ from session import create_session, add_to_session
 params = FieldStorage()
 request_method = environ['REQUEST_METHOD'].upper()
 
+
 if (request_method == 'POST'):
     user = {
         'username': params.getvalue('username'),

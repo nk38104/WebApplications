@@ -1,7 +1,7 @@
 #! C:\Users\Nikola Kelava\AppData\Local\Programs\Python\Python38-32\python.exe
 from cgi import FieldStorage
 from os import environ, mkdir, path, listdir
-from session import get_session_data
+from session import get_session_data, destroy_session
 from database import get_user_role
 
 
@@ -20,19 +20,23 @@ if (not path.isdir(img_dir_path)): # otherwise it returns error with every POST
 images = listdir(img_dir_path)
 
 if (request_type == 'POST'):
-    file_item = params["image"]
+    if (params.getvalue('btn_submit') == 'Log out'):
+        destroy_session()
+        print('Location: login_page.py')
+    else: 
+        file_item = params["image"]
 
-    if (file_item.filename):
-        img_dir_path = '../../../../htdocs/images/'
-        img_dir_path += path.basename(file_item.filename)
-        open(img_dir_path, 'wb').write(file_item.file.read(2500000))
-        success = True
-    else:
-        message = 'No file was uploaded'
-        success = False
-    
-    if (success):
-        print('Location: upload_page.py')
+        if (file_item.filename):
+            img_dir_path = '../../../../htdocs/images/'
+            img_dir_path += path.basename(file_item.filename)
+            open(img_dir_path, 'wb').write(file_item.file.read(2500000))
+            success = True
+        else:
+            message = 'No file was uploaded'
+            success = False
+        
+        if (success):
+            print('Location: upload_page.py')
 
 
 print('''
@@ -116,8 +120,8 @@ print('''
         <body>
             <nav>
                 <div id="nav-logout">
-                    <form action="login_page.py" method="GET">
-                        <input type="submit" value="Log out">
+                    <form method="POST">
+                        <input type="submit" name="btn_submit" value="Log out">
                     </form>''')
 
 user_role = get_user_role(user_data['user_id']).upper()
