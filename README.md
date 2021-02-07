@@ -1,2 +1,2 @@
 # WebApplications
-College course
+University course tasks
